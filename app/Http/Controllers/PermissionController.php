@@ -10,7 +10,12 @@ class PermissionController extends Controller
 {
     // This method will show permissions page
     public function index() {
-        return view('permissions.list');
+
+        $permissions = Permission::orderBy('created_at', 'DESC')->paginate(10);
+
+        return view('permissions.list', [
+            'permissions' => $permissions
+        ]);
     }
   
     // This method will show create permissions page
@@ -36,12 +41,31 @@ class PermissionController extends Controller
     }
 
     // This method will show edit permissions page
-    public function edit() {
-
+    public function edit($id) {
+        $permission = Permission::findOrFail($id);
+        return view('permissions.edit', [
+            'permission' => $permission
+        ]);   
     }
  
     // This method will update a permissions in DB
-    public function update() {
+    public function update($id, Request $request) {
+        $permission = Permission::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:permissions,name,'.$id.'|min:3',
+        ]);
+
+
+        if($validator->fails()) {
+            return redirect()->route('permissions.edit', $id)->withInput()->withErrors($validator);
+        }
+
+        // Permission::create(['name' => $request->name ]);
+        $permission->name = $request->name;
+        $permission->save();
+
+        return redirect()->route('permissions.index')->with('success', 'Permission updated successfully.');
 
     }
 

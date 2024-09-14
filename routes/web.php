@@ -18,9 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
 
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
-    Route::post('/permissions/store', [PermissionController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions/edit/{id}', [PermissionController::class, 'edit'])->name('permissions.edit');
+    Route::post('/permissions/edit/{id}', [PermissionController::class, 'update'])->name('permissions.update');
 });
 
 require __DIR__.'/auth.php';
