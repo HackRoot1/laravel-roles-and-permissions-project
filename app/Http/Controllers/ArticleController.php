@@ -55,13 +55,6 @@ class ArticleController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -69,6 +62,10 @@ class ArticleController extends Controller
     public function edit(string $id)
     {
         //
+        $article = Article::findOrFail($id);
+        return view('articles.edit', [
+            'article' => $article,
+        ]);
     }
 
     /**
@@ -76,14 +73,45 @@ class ArticleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|min:5',
+            'author' => 'required|min:5',
+        ]);
+
+        if ($validator->passes()) {
+
+            $article->title = $request->title; 
+            $article->text = $request->text; 
+            $article->author = $request->author; 
+            $article->save(); 
+
+            return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
+
+        } else {
+            return redirect()->route('articles.edit', $id)->withInput()->withErrors($validator);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
         //
+        $article = Article::find($request->id);
+
+        if($article == null ) {
+            Session()->flash('error', 'Article not found.');
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
+        $article->delete();
+        Session()->flash('success', 'Article deleted successfully.');
+        return response()->json([
+            'status' => true
+        ]);
     }
 }
