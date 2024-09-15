@@ -49,11 +49,11 @@ Route::middleware('auth')->group(function () {
 
     // Users Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    // Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
-    // Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/edit/{id}', [UserController::class, 'update'])->name('users.update');
-    // Route::delete('/articles/delete', [ArticleController::class, 'destroy'])->name('articles.delete');
+    Route::delete('/users/delete', [UserController::class, 'destroy'])->name('users.delete');
 
 });
 
