@@ -73,7 +73,6 @@ class PermissionController extends Controller implements HasMiddleware
             return redirect()->route('permissions.edit', $id)->withInput()->withErrors($validator);
         }
 
-        // Permission::create(['name' => $request->name ]);
         $permission->name = $request->name;
         $permission->save();
 
@@ -100,6 +99,5 @@ class PermissionController extends Controller implements HasMiddleware
             'status' => true
         ]);
     }
-
 
 }
